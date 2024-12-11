@@ -60,14 +60,14 @@ namespace TrieWindowsFormsApp
                 return;
             }
 
-            string result = trie.Search(prefix);
-            if (result != null)
+            List<string> results = trie.Search(prefix);
+            if (results.Count > 0)
             {
-                textBox2.Text = result;
+                textBox2.Text = string.Join(Environment.NewLine, results); 
             }
             else
             {
-                textBox2.Text = "Prefix nebyl nalezen.";
+                textBox2.Text = "Žádné odpovídající prefixy nenalezeny.";
             }
         }
         public class TrieNode
@@ -101,19 +101,41 @@ namespace TrieWindowsFormsApp
                 current.Name = name; 
             }
 
-            public string Search(string prefix)
+            public List<string> Search(string prefix)
             {
                 var current = root;
 
+                
                 foreach (char ch in prefix)
                 {
                     if (!current.Children.ContainsKey(ch))
                     {
-                        return null; 
+                        return new List<string>(); // Prefix není v trie
                     }
                     current = current.Children[ch];
                 }
-                return current.Name; 
+
+                
+                var results = new List<string>();
+                CollectAllNames(current, results);
+                return results;
+            }
+            private void CollectAllNames(TrieNode node, List<string> results)
+            {
+                if (node == null)
+                    return;
+
+                
+                if (node.Name != null)
+                {
+                    results.Add(node.Name);
+                }
+
+                
+                foreach (var child in node.Children.Values)
+                {
+                    CollectAllNames(child, results);
+                }
             }
         }
     }
