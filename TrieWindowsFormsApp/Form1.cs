@@ -15,6 +15,7 @@ namespace TrieWindowsFormsApp
     public partial class Form1 : Form
     {
         private Trie trie = new Trie();
+        private string sourceFilePath;
         public Form1()
         {
             InitializeComponent();
@@ -33,8 +34,8 @@ namespace TrieWindowsFormsApp
             {
                 try
                 {
-                    
-                    foreach (var line in File.ReadAllLines(openFileDialog.FileName))
+                    sourceFilePath = openFileDialog.FileName;
+                    foreach (var line in File.ReadAllLines(sourceFilePath))
                     {
                         var parts = line.Split(new[] { ' ' }, 2); 
                         if (parts.Length == 2)
@@ -63,7 +64,8 @@ namespace TrieWindowsFormsApp
             List<string> results = trie.Search(prefix);
             if (results.Count > 0)
             {
-                textBox2.Text = string.Join(Environment.NewLine, results); 
+                textBox2.Text = string.Join(Environment.NewLine, results);
+                
             }
             else
             {
@@ -94,11 +96,13 @@ namespace TrieWindowsFormsApp
                 {
                     if (!current.Children.ContainsKey(ch))
                     {
-                        current.Children[ch] = new TrieNode();
+                        current.Children[ch] = new TrieNode(); // Vytvoření nového uzlu
                     }
                     current = current.Children[ch];
                 }
-                current.Name = name; 
+
+                // Na posledním uzlu uložíme jméno
+                current.Name = name;
             }
 
             public List<string> Search(string prefix)
@@ -137,6 +141,37 @@ namespace TrieWindowsFormsApp
                     CollectAllNames(child, results);
                 }
             }
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            string newPrefix = txtNewPrefix.Text.Trim();
+            string newName = txtNewName.Text.Trim();
+
+            if (string.IsNullOrEmpty(newPrefix) || string.IsNullOrEmpty(newName))
+            {
+                MessageBox.Show("Zadejte platný prefix i jméno.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Přidání dat do trie
+            trie.Insert(newPrefix, newName);
+            MessageBox.Show($"Prefix '{newPrefix}' a jméno '{newName}' bylo úspěšně přidáno.", "Úspěch", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            // Uložení dat do souboru
+            if (!string.IsNullOrEmpty(sourceFilePath))
+            {
+                File.AppendAllText(sourceFilePath, $"{newPrefix} {newName}{Environment.NewLine}");
+                MessageBox.Show($"Prefix '{newPrefix}' a jméno '{newName}' bylo přidáno a uloženo do souboru.", "Úspěch", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Cesta ke zdrojovému souboru nebyla nalezena. Data byla přidána do aplikace, ale neuložena do souboru.", "Varování", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            // Vyčištění vstupních polí
+            txtNewPrefix.Text = string.Empty;
+            txtNewName.Text = string.Empty;
         }
     }
 }

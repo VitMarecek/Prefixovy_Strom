@@ -33,6 +33,9 @@
             this.button2 = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.txtNewPrefix = new System.Windows.Forms.TextBox();
+            this.txtNewName = new System.Windows.Forms.TextBox();
+            this.btnAdd = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -73,11 +76,38 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // txtNewPrefix
+            // 
+            this.txtNewPrefix.Location = new System.Drawing.Point(12, 287);
+            this.txtNewPrefix.Name = "txtNewPrefix";
+            this.txtNewPrefix.Size = new System.Drawing.Size(100, 20);
+            this.txtNewPrefix.TabIndex = 4;
+            // 
+            // txtNewName
+            // 
+            this.txtNewName.Location = new System.Drawing.Point(119, 287);
+            this.txtNewName.Name = "txtNewName";
+            this.txtNewName.Size = new System.Drawing.Size(100, 20);
+            this.txtNewName.TabIndex = 5;
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.Location = new System.Drawing.Point(13, 314);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(75, 23);
+            this.btnAdd.TabIndex = 6;
+            this.btnAdd.Text = "button3";
+            this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnAdd);
+            this.Controls.Add(this.txtNewName);
+            this.Controls.Add(this.txtNewPrefix);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.textBox1);
@@ -96,6 +126,9 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.TextBox txtNewPrefix;
+        private System.Windows.Forms.TextBox txtNewName;
+        private System.Windows.Forms.Button btnAdd;
     }
 }
 
