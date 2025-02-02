@@ -36,6 +36,8 @@
             this.txtNewPrefix = new System.Windows.Forms.TextBox();
             this.txtNewName = new System.Windows.Forms.TextBox();
             this.btnAdd = new System.Windows.Forms.Button();
+            this.txtRemovePrefix = new System.Windows.Forms.TextBox();
+            this.btnRemove = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -100,11 +102,30 @@
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
+            // txtRemovePrefix
+            // 
+            this.txtRemovePrefix.Location = new System.Drawing.Point(372, 287);
+            this.txtRemovePrefix.Name = "txtRemovePrefix";
+            this.txtRemovePrefix.Size = new System.Drawing.Size(100, 20);
+            this.txtRemovePrefix.TabIndex = 7;
+            // 
+            // btnRemove
+            // 
+            this.btnRemove.Location = new System.Drawing.Point(372, 314);
+            this.btnRemove.Name = "btnRemove";
+            this.btnRemove.Size = new System.Drawing.Size(75, 23);
+            this.btnRemove.TabIndex = 8;
+            this.btnRemove.Text = "button3";
+            this.btnRemove.UseVisualStyleBackColor = true;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnRemove);
+            this.Controls.Add(this.txtRemovePrefix);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.txtNewName);
             this.Controls.Add(this.txtNewPrefix);
@@ -129,6 +150,8 @@
         private System.Windows.Forms.TextBox txtNewPrefix;
         private System.Windows.Forms.TextBox txtNewName;
         private System.Windows.Forms.Button btnAdd;
+        private System.Windows.Forms.TextBox txtRemovePrefix;
+        private System.Windows.Forms.Button btnRemove;
     }
 }
 

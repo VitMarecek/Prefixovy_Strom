@@ -37,10 +37,15 @@ namespace TrieWindowsFormsApp
                     sourceFilePath = openFileDialog.FileName;
                     foreach (var line in File.ReadAllLines(sourceFilePath))
                     {
-                        var parts = line.Split(new[] { ' ' }, 2); 
+                        var trimmedLine = line.Trim(); // Oříznutí neviditelných znaků
+                        var parts = trimmedLine.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+
                         if (parts.Length == 2)
                         {
-                            trie.Insert(parts[0], parts[1]);
+                            string prefix = parts[0].Trim(); // Oříznutí prefixu
+                            string name = parts[1].Trim();   // Oříznutí jména
+                            trie.Insert(prefix, name);
+                            Console.WriteLine($"Načten prefix: '{prefix}', Jméno: '{name}'");
                         }
                     }
                     MessageBox.Show("Data byla načtena úspěšně.", "Úspěch", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -141,7 +146,68 @@ namespace TrieWindowsFormsApp
                     CollectAllNames(child, results);
                 }
             }
+
+            public bool Remove(string prefix)
+            {
+                if (string.IsNullOrEmpty(prefix)) return false;
+
+                prefix = prefix.Trim(); // Oříznutí neviditelných znaků
+                return Remove(root, prefix, 0);
+            }
+
+            private bool Remove(TrieNode node, string prefix, int depth)
+            {
+                if (node == null)
+                    return false;
+
+                // Pokud jsme dosáhli konce prefixu
+                if (depth == prefix.Length)
+                {
+                    if (node.Name == null)
+                        return false; // Prefix neexistuje jako celé jméno
+
+                    node.Name = null; // Odebrání jména
+
+                    // Pokud nemá žádné děti, můžeme ho odstranit
+                    return node.Children.Count == 0;
+                }
+
+                char ch = prefix[depth];
+                if (!node.Children.ContainsKey(ch))
+                    return false;
+
+                bool shouldDeleteChild = Remove(node.Children[ch], prefix, depth + 1);
+
+                // Pokud dítě nemá další záznamy, můžeme ho odstranit
+                if (shouldDeleteChild)
+                {
+                    node.Children.Remove(ch);
+                    return node.Children.Count == 0 && node.Name == null;
+                }
+
+                return false;
+            }
         }
+
+
+        private void RemoveFromFile(string prefix)
+        {
+            if (string.IsNullOrEmpty(sourceFilePath))
+            {
+                MessageBox.Show("Cesta ke zdrojovému souboru nebyla nalezena.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            prefix = prefix.Trim(); // Oříznutí prefixu
+
+            var lines = File.ReadAllLines(sourceFilePath, Encoding.UTF8)
+                .Select(line => line.Trim()) // Oříznutí každého řádku
+                .Where(line => !line.StartsWith(prefix + " ")) // Ověření správného formátu
+                .ToList();
+
+            File.WriteAllLines(sourceFilePath, lines, Encoding.UTF8);
+        }
+
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
@@ -172,6 +238,30 @@ namespace TrieWindowsFormsApp
             // Vyčištění vstupních polí
             txtNewPrefix.Text = string.Empty;
             txtNewName.Text = string.Empty;
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            string prefix = txtRemovePrefix.Text.Trim();
+            if (string.IsNullOrEmpty(prefix))
+            {
+                MessageBox.Show("Zadejte prefix k odstranění.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Odebrání z trie
+            bool removed = trie.Remove(prefix);
+            if (removed)
+            {
+                RemoveFromFile(prefix);
+                MessageBox.Show($"Prefix '{prefix}' byl úspěšně odstraněn.", "Úspěch", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Prefix nebyl nalezen.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            txtRemovePrefix.Text = string.Empty;
         }
     }
 }
