@@ -129,6 +129,25 @@ namespace TrieWindowsFormsApp
                 CollectAllNames(current, results);
                 return results;
             }
+
+            public List<string> GetAllData()
+            {
+                List<string> result = new List<string>();
+                CollectAllData(root, "", result);
+                return result;
+            }
+            private void CollectAllData(TrieNode node, string currentPrefix, List<string> result)
+            {
+                if (node.Name != null)
+                {
+                    result.Add($"{currentPrefix} {node.Name}");
+                }
+
+                foreach (var child in node.Children)
+                {
+                    CollectAllData(child.Value, currentPrefix + child.Key, result);
+                }
+            }
             private void CollectAllNames(TrieNode node, List<string> results)
             {
                 if (node == null)
@@ -262,6 +281,20 @@ namespace TrieWindowsFormsApp
             }
 
             txtRemovePrefix.Text = string.Empty;
+        }
+
+        private void btnShowData_Click(object sender, EventArgs e)
+        {
+            List<string> allData = trie.GetAllData();
+
+            if (allData.Count > 0)
+            {
+                txtAllData.Text = string.Join(Environment.NewLine, allData);
+            }
+            else
+            {
+                txtAllData.Text = "Žádná data nejsou uložena.";
+            }
         }
     }
 }

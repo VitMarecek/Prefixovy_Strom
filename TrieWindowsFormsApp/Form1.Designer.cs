@@ -38,6 +38,8 @@
             this.btnAdd = new System.Windows.Forms.Button();
             this.txtRemovePrefix = new System.Windows.Forms.TextBox();
             this.btnRemove = new System.Windows.Forms.Button();
+            this.btnShowData = new System.Windows.Forms.Button();
+            this.txtAllData = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // button1
@@ -98,7 +100,7 @@
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
             this.btnAdd.TabIndex = 6;
-            this.btnAdd.Text = "button3";
+            this.btnAdd.Text = "Přidat prefix";
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
@@ -113,17 +115,37 @@
             // 
             this.btnRemove.Location = new System.Drawing.Point(372, 314);
             this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(75, 23);
+            this.btnRemove.Size = new System.Drawing.Size(100, 23);
             this.btnRemove.TabIndex = 8;
-            this.btnRemove.Text = "button3";
+            this.btnRemove.Text = "Odstranit prefix";
             this.btnRemove.UseVisualStyleBackColor = true;
             this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            // 
+            // btnShowData
+            // 
+            this.btnShowData.Location = new System.Drawing.Point(543, 11);
+            this.btnShowData.Name = "btnShowData";
+            this.btnShowData.Size = new System.Drawing.Size(112, 23);
+            this.btnShowData.TabIndex = 9;
+            this.btnShowData.Text = "Vypsat prefixy";
+            this.btnShowData.UseVisualStyleBackColor = true;
+            this.btnShowData.Click += new System.EventHandler(this.btnShowData_Click);
+            // 
+            // txtAllData
+            // 
+            this.txtAllData.Location = new System.Drawing.Point(543, 40);
+            this.txtAllData.Multiline = true;
+            this.txtAllData.Name = "txtAllData";
+            this.txtAllData.Size = new System.Drawing.Size(245, 208);
+            this.txtAllData.TabIndex = 10;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.txtAllData);
+            this.Controls.Add(this.btnShowData);
             this.Controls.Add(this.btnRemove);
             this.Controls.Add(this.txtRemovePrefix);
             this.Controls.Add(this.btnAdd);
@@ -152,6 +174,8 @@
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.TextBox txtRemovePrefix;
         private System.Windows.Forms.Button btnRemove;
+        private System.Windows.Forms.Button btnShowData;
+        private System.Windows.Forms.TextBox txtAllData;
     }
 }
 
