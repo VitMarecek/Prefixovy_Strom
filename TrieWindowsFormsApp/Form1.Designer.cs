@@ -40,6 +40,8 @@
             this.btnRemove = new System.Windows.Forms.Button();
             this.btnShowData = new System.Windows.Forms.Button();
             this.txtAllData = new System.Windows.Forms.TextBox();
+            this.buttonLinear = new System.Windows.Forms.Button();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // button1
@@ -139,11 +141,29 @@
             this.txtAllData.Size = new System.Drawing.Size(245, 208);
             this.txtAllData.TabIndex = 10;
             // 
+            // buttonLinear
+            // 
+            this.buttonLinear.Location = new System.Drawing.Point(664, 386);
+            this.buttonLinear.Name = "buttonLinear";
+            this.buttonLinear.Size = new System.Drawing.Size(124, 23);
+            this.buttonLinear.TabIndex = 11;
+            this.buttonLinear.Text = "Vyhledat - Linearni";
+            this.buttonLinear.UseVisualStyleBackColor = true;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(664, 418);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(124, 20);
+            this.textBox3.TabIndex = 12;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.buttonLinear);
             this.Controls.Add(this.txtAllData);
             this.Controls.Add(this.btnShowData);
             this.Controls.Add(this.btnRemove);
@@ -176,6 +196,8 @@
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.Button btnShowData;
         private System.Windows.Forms.TextBox txtAllData;
+        private System.Windows.Forms.Button buttonLinear;
+        private System.Windows.Forms.TextBox textBox3;
     }
 }
 
