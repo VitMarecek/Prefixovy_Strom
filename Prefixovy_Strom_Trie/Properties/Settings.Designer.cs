@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TrieWindowsFormsApp.Properties
+namespace Prefixovy_Strom_Trie.Properties
 {
 
 

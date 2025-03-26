@@ -7,28 +7,41 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static TrieWindowsFormsApp.Prefix_Tree_Trie;
+using static Prefixovy_Strom_Trie.PrefixovyStrom;
 using System.IO;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
-namespace TrieWindowsFormsApp
+namespace Prefixovy_Strom_Trie
 {
-    public partial class Prefix_Tree_Trie : Form
+    public partial class PrefixovyStrom : Form
     {
         private Trie trie = new Trie();
         private string sourceFilePath;
-        public Prefix_Tree_Trie()
+        public PrefixovyStrom()
         {
             InitializeComponent();
+            searchButton.Enabled = false;
+            addButton.Enabled = false;
+            deleteButton.Enabled = false;
+            linearSearchButton.Enabled = false;
+            buttonListBox.Enabled = false;
+            textBoxDataAdd.Enabled = false;
+            textBoxLinearSearch.Enabled = false;
+            textBoxPrefixAdd.Enabled = false;
+            textBoxPrefixDelete.Enabled = false;
+            textBoxPrefixSearch.Enabled = false;
+            textBoxResult.Enabled = false;
+            textBoxTrie.Enabled = false;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void loadButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = "Text Files (*.txt)|*.txt",
                 Title = "Vyberte soubor"
             };
-            
+
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -37,13 +50,13 @@ namespace TrieWindowsFormsApp
                     sourceFilePath = openFileDialog.FileName;
                     foreach (var line in File.ReadAllLines(sourceFilePath))
                     {
-                        var trimmedLine = line.Trim(); 
+                        var trimmedLine = line.Trim();
                         var parts = trimmedLine.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
 
                         if (parts.Length == 2)
                         {
-                            string prefix = parts[0].Trim(); 
-                            string name = parts[1].Trim();   
+                            string prefix = parts[0].Trim();
+                            string name = parts[1].Trim();
                             trie.Insert(prefix, name);
                             Console.WriteLine($"Načten prefix: '{prefix}', Jméno: '{name}'");
                         }
@@ -54,12 +67,25 @@ namespace TrieWindowsFormsApp
                 {
                     MessageBox.Show($"Došlo k chybě při načítání souboru: {ex.Message}", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                searchButton.Enabled = true;
+                addButton.Enabled = true;
+                deleteButton.Enabled = true;
+                linearSearchButton.Enabled = true;
+                buttonListBox.Enabled = true;
+                textBoxDataAdd.Enabled = true;
+                textBoxLinearSearch.Enabled = true;
+                textBoxPrefixAdd.Enabled = true;
+                textBoxPrefixDelete.Enabled = true;
+                textBoxPrefixSearch.Enabled = true;
+                textBoxResult.Enabled = true;
+                textBoxTrie.Enabled = true;
             }
+            
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void searchButton_Click(object sender, EventArgs e)
         {
-            string prefix = textBox1.Text.Trim();
+            string prefix = textBoxPrefixSearch.Text.Trim();
             if (string.IsNullOrEmpty(prefix))
             {
                 MessageBox.Show("Zadejte prosím prefix.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -69,21 +95,109 @@ namespace TrieWindowsFormsApp
             List<string> results = trie.Search(prefix);
             if (results.Count > 0)
             {
-                textBox2.Text = string.Join(Environment.NewLine, results);
-                
+                textBoxResult.Text = string.Join(Environment.NewLine, results);
+
             }
             else
             {
-                textBox2.Text = "Žádné odpovídající prefixy nenalezeny.";
+                textBoxResult.Text = "Žádné odpovídající prefixy nenalezeny.";
             }
+        }
+
+        private void addButton_Click(object sender, EventArgs e)
+        {
+            string newPrefix = textBoxPrefixAdd.Text.Trim();
+            string newName = textBoxDataAdd.Text.Trim();
+
+            if (string.IsNullOrEmpty(newPrefix) || string.IsNullOrEmpty(newName))
+            {
+                MessageBox.Show("Zadejte platný prefix i jméno.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Přidání dat do trie
+            trie.Insert(newPrefix, newName);
+            MessageBox.Show($"Prefix '{newPrefix}' a jméno '{newName}' bylo úspěšně přidáno.", "Úspěch", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+
+            // Vyčištění vstupních polí
+            textBoxPrefixAdd.Text = string.Empty;
+            textBoxDataAdd.Text = string.Empty;
+        }
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            string prefix = textBoxPrefixDelete.Text.Trim();
+            if (string.IsNullOrEmpty(prefix))
+            {
+                MessageBox.Show("Zadejte prefix k odstranění.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Odebrání z trie
+            bool removed = trie.Remove(prefix);
+            if (removed)
+            {               
+                MessageBox.Show($"Prefix '{prefix}' byl úspěšně odstraněn.", "Úspěch", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Prefix již neexistuje.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            textBoxPrefixDelete.Text = string.Empty;
+        }
+
+        private void linearSearchButton_Click(object sender, EventArgs e)
+        {
+            string prefix = textBoxLinearSearch.Text.Trim();
+            string result = "";
+            string finalString = ""; //Oprav
+            StreamReader sw = new StreamReader(sourceFilePath);
+            string radek;
+            bool log = false;
+            while (!sw.EndOfStream && !log)
+            {
+                radek = sw.ReadLine();
+                string[] radecek = radek.Split(new char[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                if (radecek[0].StartsWith(prefix))
+                {
+                    result = radecek[1];
+                    finalString = finalString + " " + result;
+                }
+            }
+            if (finalString != "")
+            {
+                textBoxResult.Text = finalString;
+            }
+            else
+            {
+                textBoxResult.Text = "Žádné odpovídající prefixy nenalezeny.";
+            }
+        }
+
+        private void buttonListBox_Click(object sender, EventArgs e)
+        {                           
+                List<string> allData = trie.GetAllData();
+                
+                if (allData.Count > 0)
+                {
+                    textBoxTrie.Text = string.Join(Environment.NewLine, allData);
+                    
+                }
+                else
+                {
+                    textBoxTrie.Text = "Žádná data nejsou uložena.";
+                }
+            
+            
         }
         public class TrieNode
         {
             public Dictionary<char, TrieNode> Children { get; set; } = new Dictionary<char, TrieNode>();
 
-            public string Name { get; set; } = null; 
+            public string Name { get; set; } = null;
         }
-
         public class Trie
         {
             private TrieNode root;
@@ -92,6 +206,8 @@ namespace TrieWindowsFormsApp
             {
                 root = new TrieNode();
             }
+
+            
 
             public void Insert(string prefix, string name)
             {
@@ -114,7 +230,7 @@ namespace TrieWindowsFormsApp
             {
                 var current = root;
 
-                
+
                 foreach (char ch in prefix)
                 {
                     if (!current.Children.ContainsKey(ch))
@@ -124,7 +240,7 @@ namespace TrieWindowsFormsApp
                     current = current.Children[ch];
                 }
 
-                
+
                 var results = new List<string>();
                 CollectAllNames(current, results);
                 return results;
@@ -153,19 +269,19 @@ namespace TrieWindowsFormsApp
                 if (node == null)
                     return;
 
-                
+
                 if (node.Name != null)
                 {
                     results.Add(node.Name);
                 }
 
-                
+
                 foreach (var child in node.Children.Values)
                 {
                     CollectAllNames(child, results);
                 }
             }
-
+            
             public bool Remove(string prefix)
             {
                 if (string.IsNullOrEmpty(prefix)) return false;
@@ -205,85 +321,6 @@ namespace TrieWindowsFormsApp
                 }
 
                 return false;
-            }
-        }
-
-
-        private void RemoveFromFile(string prefix)
-        {
-            if (string.IsNullOrEmpty(sourceFilePath))
-            {
-                MessageBox.Show("Cesta ke zdrojovému souboru nebyla nalezena.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            prefix = prefix.Trim(); // Oříznutí prefixu
-
-            var lines = File.ReadAllLines(sourceFilePath, Encoding.UTF8)
-                .Select(line => line.Trim()) // Oříznutí každého řádku
-                .Where(line => !line.StartsWith(prefix + " ")) // Ověření správného formátu
-                .ToList();
-
-            File.WriteAllLines(sourceFilePath, lines, Encoding.UTF8);
-        }
-
-
-        private void btnAdd_Click(object sender, EventArgs e)
-        {
-            string newPrefix = txtNewPrefix.Text.Trim();
-            string newName = txtNewName.Text.Trim();
-
-            if (string.IsNullOrEmpty(newPrefix) || string.IsNullOrEmpty(newName))
-            {
-                MessageBox.Show("Zadejte platný prefix i jméno.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // Přidání dat do trie
-            trie.Insert(newPrefix, newName);
-            MessageBox.Show($"Prefix '{newPrefix}' a jméno '{newName}' bylo úspěšně přidáno.", "Úspěch", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
-
-            // Vyčištění vstupních polí
-            txtNewPrefix.Text = string.Empty;
-            txtNewName.Text = string.Empty;
-        }
-
-        private void btnRemove_Click(object sender, EventArgs e)
-        {
-            string prefix = txtRemovePrefix.Text.Trim();
-            if (string.IsNullOrEmpty(prefix))
-            {
-                MessageBox.Show("Zadejte prefix k odstranění.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // Odebrání z trie
-            bool removed = trie.Remove(prefix);
-            if (removed)
-            {
-                RemoveFromFile(prefix);
-                MessageBox.Show($"Prefix '{prefix}' byl úspěšně odstraněn.", "Úspěch", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                MessageBox.Show("Prefix nebyl nalezen.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-
-            txtRemovePrefix.Text = string.Empty;
-        }
-
-        private void btnShowData_Click(object sender, EventArgs e)
-        {
-            List<string> allData = trie.GetAllData();
-
-            if (allData.Count > 0)
-            {
-                txtAllData.Text = string.Join(Environment.NewLine, allData);
-            }
-            else
-            {
-                txtAllData.Text = "Žádná data nejsou uložena.";
             }
         }
     }
