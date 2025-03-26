@@ -7,16 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static TrieWindowsFormsApp.Form1;
+using static TrieWindowsFormsApp.Prefix_Tree_Trie;
 using System.IO;
 
 namespace TrieWindowsFormsApp
 {
-    public partial class Form1 : Form
+    public partial class Prefix_Tree_Trie : Form
     {
         private Trie trie = new Trie();
         private string sourceFilePath;
-        public Form1()
+        public Prefix_Tree_Trie()
         {
             InitializeComponent();
         }
@@ -37,13 +37,13 @@ namespace TrieWindowsFormsApp
                     sourceFilePath = openFileDialog.FileName;
                     foreach (var line in File.ReadAllLines(sourceFilePath))
                     {
-                        var trimmedLine = line.Trim(); // Oříznutí neviditelných znaků
+                        var trimmedLine = line.Trim(); 
                         var parts = trimmedLine.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
 
                         if (parts.Length == 2)
                         {
-                            string prefix = parts[0].Trim(); // Oříznutí prefixu
-                            string name = parts[1].Trim();   // Oříznutí jména
+                            string prefix = parts[0].Trim(); 
+                            string name = parts[1].Trim();   
                             trie.Insert(prefix, name);
                             Console.WriteLine($"Načten prefix: '{prefix}', Jméno: '{name}'");
                         }
@@ -106,7 +106,7 @@ namespace TrieWindowsFormsApp
                     current = current.Children[ch];
                 }
 
-                // Na posledním uzlu uložíme jméno
+                // Uložení jména na posledním uzlu
                 current.Name = name;
             }
 
@@ -119,7 +119,7 @@ namespace TrieWindowsFormsApp
                 {
                     if (!current.Children.ContainsKey(ch))
                     {
-                        return new List<string>(); // Prefix není v trie
+                        return new List<string>(); // Prefix není ve stromě
                     }
                     current = current.Children[ch];
                 }
@@ -242,17 +242,7 @@ namespace TrieWindowsFormsApp
             // Přidání dat do trie
             trie.Insert(newPrefix, newName);
             MessageBox.Show($"Prefix '{newPrefix}' a jméno '{newName}' bylo úspěšně přidáno.", "Úspěch", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            // Uložení dat do souboru
-            if (!string.IsNullOrEmpty(sourceFilePath))
-            {
-                File.AppendAllText(sourceFilePath, $"{newPrefix} {newName}{Environment.NewLine}");
-                MessageBox.Show($"Prefix '{newPrefix}' a jméno '{newName}' bylo přidáno a uloženo do souboru.", "Úspěch", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                MessageBox.Show("Cesta ke zdrojovému souboru nebyla nalezena. Data byla přidána do aplikace, ale neuložena do souboru.", "Varování", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            
 
             // Vyčištění vstupních polí
             txtNewPrefix.Text = string.Empty;

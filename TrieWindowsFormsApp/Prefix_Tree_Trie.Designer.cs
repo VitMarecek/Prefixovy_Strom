@@ -1,6 +1,6 @@
 ﻿namespace TrieWindowsFormsApp
 {
-    partial class Form1
+    partial class Prefix_Tree_Trie
     {
         /// <summary>
         /// Vyžaduje se proměnná návrháře.
